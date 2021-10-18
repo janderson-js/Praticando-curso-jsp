@@ -14,11 +14,19 @@ public class SingleConnectionBanco implements Serializable {
 	private static String senha = "admin";
 	private static String url = "jdbc:postgresql://localhost:5433/pratica-curso-jsp?autoreconnect=true";
 	
-	public SingleConnectionBanco() throws Exception{
+	public static Connection getConnection() {
+		return connection;
+	}
+	
+	static {
+		conectar();
+	}
+
+	public SingleConnectionBanco() {
 		conectar();
 	}
 	
-	public static void conectar() throws Exception {
+	public static void conectar() {
 		try {
 			if(connection == null) {
 				

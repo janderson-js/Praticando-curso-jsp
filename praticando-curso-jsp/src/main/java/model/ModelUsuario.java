@@ -18,6 +18,7 @@ public class ModelUsuario implements Serializable {
 	private String fotoUser;
 	private String extensaoFotoUser;
 	private List<ModelTelefone> telefones;
+	private Double rendaMensal;
 	
 	private String cep;
 	private String cidade;
@@ -31,9 +32,29 @@ public class ModelUsuario implements Serializable {
 	
 	private Boolean userAdmin;
 	
+	private Long userCad;
+	private Date datacad;
 	
 	
 	
+	public Double getRendaMensal() {
+		return rendaMensal;
+	}
+	public void setRendaMensal(Double rendaMensal) {
+		this.rendaMensal = rendaMensal;
+	}
+	public Date getDatacad() {
+		return datacad;
+	}
+	public void setDatacad(Date datacad) {
+		this.datacad = datacad;
+	}
+	public Long getUserCad() {
+		return userCad;
+	}
+	public void setUserCad(Long userCad) {
+		this.userCad = userCad;
+	}
 	public Boolean getUserAdmin() {
 		return userAdmin;
 	}
