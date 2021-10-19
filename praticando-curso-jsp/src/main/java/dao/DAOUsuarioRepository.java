@@ -22,5 +22,4 @@ public class DAOUsuarioRepository implements Serializable{
 		String sql = "";
 		
 	}
-
 }
