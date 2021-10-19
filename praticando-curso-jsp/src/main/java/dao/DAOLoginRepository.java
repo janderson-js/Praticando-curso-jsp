@@ -32,7 +32,7 @@ public class DAOLoginRepository {
 			String slqSenha = " Select * from model_usuario where upper(senha) = upper(?) and id=?";
 			
 			PreparedStatement pstmLogin = connection.prepareStatement(slqSenha);
-			pstmLogin.setString(1, slqSenha);
+			pstmLogin.setString(1, modelUsuario.getSenha());
 			pstmLogin.setLong(2, id);
 			
 			ResultSet rsLogin = pstmLogin.executeQuery();

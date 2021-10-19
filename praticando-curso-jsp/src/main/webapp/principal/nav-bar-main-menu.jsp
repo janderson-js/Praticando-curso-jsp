@@ -11,7 +11,7 @@
 				<img class="img-80 img-radius" src="<%= request.getContextPath()%>/assets/images/avatar-4.jpg"
 					alt="User-Profile-Image">
 				<div class="user-details">
-					<span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+					<span id="more-details">${usuarioLogado.nome}<i class="fa fa-caret-down"></i></span>
 				</div>
 			</div>
 
