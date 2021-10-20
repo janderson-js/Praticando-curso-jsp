@@ -33,6 +33,7 @@ public class ServletLogin extends HttpServlet {
 
 			String login = request.getParameter("login");
 			String senha = request.getParameter("senha");
+			String url = request.getParameter("url");
 			
 			if(login != null && !login.isEmpty() && senha != null && !senha.isEmpty()) {
 				
@@ -48,23 +49,24 @@ public class ServletLogin extends HttpServlet {
 					
 					modelUsuario = daoUsuarioRepository.carregaUsuarioLogin(login);
 					
-					RequestDispatcher redirecionar = request.getRequestDispatcher("/principal/principal.jsp");
-					request.setAttribute("usuarioLogado", modelUsuario);
+					if (url == null || url.equals("null")) {
+						url = "principal/principal.jsp";
+					}
+					
+					
+					RequestDispatcher redirecionar = request.getRequestDispatcher(url);
+					request.getSession().setAttribute("usuarioLogado", modelUsuario);
 					redirecionar.forward(request, response);
 					
 				}else {
 					this.teste(request, response);
 				}
-				
-				
 			}else {
 				this.teste(request, response);
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	protected void teste(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -74,5 +76,4 @@ public class ServletLogin extends HttpServlet {
 		redirecionar.forward(request, response);
 		
 	}
-
 }

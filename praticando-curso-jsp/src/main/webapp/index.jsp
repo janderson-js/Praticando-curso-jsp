@@ -74,7 +74,7 @@
 						action="<%=request.getContextPath()%>/ServletLogin" method="post"
 						novalidate>
 						<div class="text-center">
-							<img src="assets/images/logo.png" alt="logo.png">
+							<img src="<%=request.getContextPath()%>/assets/images/logo.png" alt="logo.png">
 						</div>
 						<div class="auth-box card">
 							<div class="card-block">
