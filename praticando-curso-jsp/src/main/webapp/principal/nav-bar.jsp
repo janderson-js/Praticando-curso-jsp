@@ -117,8 +117,8 @@
 								Screen
 						</a></li>
 						<li class="waves-effect waves-light"><a
-							href="auth-normal-sign-in.html"> <i
-								class="ti-layout-sidebar-left"></i> Logout
+							href="<%=request.getContextPath()%>/ServletLogin?acao=sair"> <i
+								class="ti-layout-sidebar-left"></i> Sair
 						</a></li>
 					</ul></li>
 			</ul>

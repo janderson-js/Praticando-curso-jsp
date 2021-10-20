@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import connection.SingleConnectionBanco;
 import model.ModelUsuario;
 
 
@@ -40,9 +41,7 @@ public class FilterAutenticacao implements Filter {
 			HttpServletRequest req = (HttpServletRequest) request;
 			HttpSession session = req.getSession();
 			
-			ModelUsuario usuario = (ModelUsuario) session.getAttribute("usuarioLogado");
-			
-			String usuarioLogado = usuario.getLogin();
+			String usuarioLogado = (String) session.getAttribute("usuarioLogin");
 			String urlAutenticar = req.getServletPath();
 			
 			if(usuarioLogado == null && !urlAutenticar.equalsIgnoreCase("/principal/ServletLogin")) {
@@ -67,6 +66,7 @@ public class FilterAutenticacao implements Filter {
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		
+		connection = SingleConnectionBanco.getConnection();
 	}
 
 }
