@@ -83,7 +83,8 @@ public class ServletLogin extends HttpServlet {
 	protected void teste(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		RequestDispatcher redirecionar = request.getRequestDispatcher("index.jsp");
-		request.setAttribute("msgLogin", "Informe o login e senha corretamente!!!!");
+		request.setAttribute("msgLogin", "<div class='alert alert-danger alert-dismissible'><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\r\n"
+				+ "<strong>Login ou senha incorretos!!!!</strong></div>");
 		redirecionar.forward(request, response);
 		
 	}
