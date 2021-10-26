@@ -66,6 +66,7 @@ public class ServletLogin extends HttpServlet {
 					
 					RequestDispatcher redirecionar = request.getRequestDispatcher(url);
 					request.getSession().setAttribute("usuarioLogin", modelUsuario.getLogin());
+					request.getSession().setAttribute("imgUser", modelUsuario.getFotoUser());
 					request.getSession().setAttribute("usuarioLogado", modelUsuario);
 					redirecionar.forward(request, response);
 					
@@ -83,8 +84,8 @@ public class ServletLogin extends HttpServlet {
 	protected void teste(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		RequestDispatcher redirecionar = request.getRequestDispatcher("index.jsp");
-		request.setAttribute("msgLogin", "<div class='alert alert-danger alert-dismissible'><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\r\n"
-				+ "<strong>Login ou senha incorretos!!!!</strong></div>");
+		request.setAttribute("msgLogin", "<div style=\"color: #842029;background-color: #f8d7da;border-color: #f5c2c7;\" class='alert alert-danger alert-dismissible'><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\r\n"
+				+ "<strong><i class=\"fas fa-exclamation-circle\"></i> Login ou senha incorretos!!!!</strong></div>");
 		redirecionar.forward(request, response);
 		
 	}

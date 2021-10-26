@@ -1,5 +1,11 @@
+<%@page import="model.ModelUsuario"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<%
+ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
+%>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -33,94 +39,142 @@
 													<div class="card-header">
 														<h5>Cad. Usuário</h5>
 													</div>
+													${msg}
 													<div class="card-block">
-														<form class="form-material" id="formUsuario" method="post"
+														<form class="form-material" enctype="multipart/form-data"
+															id="formUsuario" method="post"
 															action="<%=request.getContextPath()%>/ServletUsuarioController">
 															<div class="form-group form-default form-static-label">
+																<div class="main-menu-header">
+																	<c:if
+																		test="${dadosUsuario.fotoUser != '' && dadosUsuario.fotoUser != null}">
+																		<img id="fotoUsuario" class="img-80 img-radius"
+																			alt="imagem de usuario"
+																			src="${dadosUsuario.fotoUser}">
+																	</c:if>
+																	<c:if
+																		test="${dadosUsuario.fotoUser == '' || dadosUsuario.fotoUser == null}">
+																		<img id="fotoUsuario" class="img-80 img-radius"
+																			alt="imagem de usuario"
+																			src="<%=request.getContextPath()%>/assets/images/avatar-6.png">
+																	</c:if>
+																</div>
+																</br>
+																<div>
+																	<input type="file" name="filefoto" id="filefoto"
+																		accept="image/"
+																		onchange="visualizarImg('fotoembase64','filefoto');"
+																		class="form-contro-file">
+																</div>
+															</div>
+															</br>
+															<div class="form-group form-default form-static-label">
 																<input id="id" type="text" name="id"
-																	class="form-control" readonly="readonly" autocomplete="off"> <span
-																	class="form-bar"></span> <label class="float-label">ID:</label>
+																	class="form-control" readonly="readonly"
+																	autocomplete="off" value="${dadosUsuario.id}">
+																<span class="form-bar"></span> <label
+																	class="float-label">ID:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="nome" type="text" name="nome"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.nome}"> <span
 																	class="form-bar"></span> <label class="float-label">Nome:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="cpf" type="text" name="cpf"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.cpf}"> <span
 																	class="form-bar"></span> <label class="float-label">CPF:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="data" type="date" name="data"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.dataNascimento}"> <span
 																	class="form-bar"></span> <label class="float-label">Data
 																	de Nascimento:</label>
 															</div>
-															<div class="form-group form-default form-static-label">
-																<input id="rendaMensal" type="number" name="rendaMensal"
-																	class="form-control" required="" autocomplete="off"> <span
+															<div  class="form-group form-default form-static-label">
+																<input id="rendaMensal" type="text" name="rendaMensal"
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.rendaMensal}"> <span
 																	class="form-bar"></span> <label class="float-label">Renda
 																	Mensal:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="email" type="email" name="email"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.email}"> <span
 																	class="form-bar"></span> <label class="float-label">E-mail:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
-																<select name="select" class="form-control"
-																	style="border-style: none;border: none;">
+																<select name="perfil" class="form-control"
+																	style="border-style: none; border: none;">
 																	<option value="">Perfil</option>
-																	<option value="ADMIN">ADMIN</option>
-																	<option value="AUXILIAR">AUXÍLIAR</option>
-																	<option value="SECRETARIA">SECREÁRIA</option>
+																	<option value="ADMIN" <%if(dadosUsuario != null && dadosUsuario.getPerfil().equals("ADMIN")){out.print(" selected ");}%>>ADMIN</option>
+																	<option value="AUXILIAR" <%if(dadosUsuario != null && dadosUsuario.getPerfil().equals("AUXILIAR")){out.print(" selected ");}%>>AUXÍLIAR</option>
+																	<option value="SECRETARIA" <%if(dadosUsuario != null && dadosUsuario.getPerfil().equals("SECRETARIA")){out.print(" selected ");}%>>SECREÁRIA</option>
 																</select>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="login" type="text" name="login"
-																	class="form-control" required=""> <span
+																	class="form-control" required=""
+																	value="${dadosUsuario.login}"> <span
 																	class="form-bar"></span> <label class="float-label">Login:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="senha" type="password" name="senha"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.senha}"> <span
 																	class="form-bar"></span> <label class="float-label">Senha:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="cep" type="text" name="cep"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.cep}"> <span
 																	class="form-bar"></span> <label class="float-label">CEP:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="uf" type="text" name="uf"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.uf}"> <span
 																	class="form-bar"></span> <label class="float-label">UF:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="cidade" type="text" name="cidade"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.cidade}"> <span
 																	class="form-bar"></span> <label class="float-label">Cidade:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="bairro" type="text" name="bairro"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.bairro}"> <span
 																	class="form-bar"></span> <label class="float-label">Bairro:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="logradouro" type="text" name="logradouro"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.logradouro}"> <span
 																	class="form-bar"></span> <label class="float-label">Logradouro:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input id="numero" type="text" name="numero"
-																	class="form-control" required="" autocomplete="off"> <span
+																	class="form-control" required="" autocomplete="off"
+																	value="${dadosUsuario.numero}"> <span
 																	class="form-bar"></span> <label class="float-label">Numero:</label>
 															</div>
 															<div class="form-group form-default form-static-label">
-																Sexo:</br>
-																masculino:<input id="sexo" type="radio" value="MASCULINO"  checked="checked" name="sexo"> 
-																feminino:<input id="sexo" type="radio" value="FEMININO" name="sexo"> 
+																Sexo:</br> masculino:<input
+																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("MASCULINO")) {
+	out.print(" checked ");
+}%>
+																	id="sexo" type="radio" value="MASCULINO"
+																	checked="checked" name="sexo"> feminino:<input
+																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("FEMININO")) {
+	out.print(" checked ");
+}%>
+																	id="sexo" type="radio" value="FEMININO" name="sexo">
 															</div>
 															<div class="form-group form-default form-static-label">
 																<button type="submit"

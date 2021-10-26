@@ -36,6 +36,16 @@ public class ModelUsuario implements Serializable {
 	private Date datacad;
 	
 	
+	public boolean isNovo() {
+		
+		if(this.id == null) {
+			return true;
+		}else if(this.id != null && this.id > 0) {
+			return false;
+		}
+		
+		return id == null;
+	}
 	
 	public Double getRendaMensal() {
 		return rendaMensal;
@@ -172,4 +182,16 @@ public class ModelUsuario implements Serializable {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+
+	@Override
+	public String toString() {
+		return "ModelUsuario [id=" + id + ", nome=" + nome + ", dataNascimento=" + dataNascimento + ", cpf=" + cpf
+				+ ", email=" + email + ", perfil=" + perfil + ", sexo=" + sexo + ", fotoUser=" + fotoUser
+				+ ", extensaoFotoUser=" + extensaoFotoUser + ", telefones=" + telefones + ", rendaMensal=" + rendaMensal
+				+ ", cep=" + cep + ", cidade=" + cidade + ", bairro=" + bairro + ", logradouro=" + logradouro + ", uf="
+				+ uf + ", numero=" + numero + ", login=" + login + ", senha=" + senha + ", userAdmin=" + userAdmin
+				+ ", userCad=" + userCad + ", datacad=" + datacad + "]";
+	}
+	
+	
 }

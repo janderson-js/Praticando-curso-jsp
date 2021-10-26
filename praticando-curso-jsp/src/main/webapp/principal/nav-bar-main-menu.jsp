@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <nav class="pcoded-navbar">
 	<div class="sidebar_toggle">
@@ -8,8 +9,12 @@
 	<div class="pcoded-inner-navbar main-menu">
 		<div class="">
 			<div class="main-menu-header">
-				<img class="img-80 img-radius" src="<%= request.getContextPath()%>/assets/images/avatar-4.jpg"
-					alt="User-Profile-Image">
+				<c:if test="${imgUser != '' && imgUser != null}">					
+						<img alt="Imagem do Usuário" class="img-80 img-radius"  src="${imgUser}" width="70px">
+					</c:if>
+					<c:if test="${imgUser == '' || imgUser == null}">
+						<img alt="Imagem do Usuário" class="img-80 img-radius"  src="assets/images/avatar-6.png" width="70px">
+					</c:if>
 				<div class="user-details">
 					<span id="more-details">${usuarioLogado.nome}<i class="fa fa-caret-down"></i></span>
 				</div>
