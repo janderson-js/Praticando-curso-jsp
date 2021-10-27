@@ -39,7 +39,9 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 													<div class="card-header">
 														<h5>Cad. Usuário</h5>
 													</div>
-													${msg}
+													<div class="card-header">
+														${msg}
+													</div>
 													<div class="card-block">
 														<form class="form-material" enctype="multipart/form-data"
 															id="formUsuario" method="post"
@@ -61,7 +63,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 																</div>
 																</br>
 																<div>
-																	<input type="file" name="filefoto" id="filefoto"
+																	<input type="file" name="filefoto" id="filefoto" onchange="visualizarImg('fotoUsuario','filefoto');"
 																		accept="image/"
 																		onchange="visualizarImg('fotoembase64','filefoto');"
 																		class="form-contro-file">
@@ -166,21 +168,48 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 															</div>
 															<div class="form-group form-default form-static-label">
 																Sexo:</br> masculino:<input
-																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("MASCULINO")) {
-	out.print(" checked ");
-}%>
+																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("MASCULINO")) {out.print(" checked ");}%>
 																	id="sexo" type="radio" value="MASCULINO"
 																	checked="checked" name="sexo"> feminino:<input
-																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("FEMININO")) {
-	out.print(" checked ");
-}%>
+																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("FEMININO")) {out.print(" checked ");}%>
 																	id="sexo" type="radio" value="FEMININO" name="sexo">
 															</div>
 															<div class="form-group form-default form-static-label">
-																<button type="submit"
-																	class="btn btn-success waves-effect waves-light">Salvar</button>
+																<button onclick="limarForm();" class="btn btn-primary waves-effect waves-light">Limpar Formulario</button>
+																<button type="submit"class="btn btn-success waves-effect waves-light">Salvar</button>
 															</div>
 														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="card">
+													<div class="card-block">
+														<div class="card-header">
+															<h5>Lista de Usuário</h5>
+														</div>
+														<table class="table table-hover">
+															<thead>
+														    	<tr>
+														      		<th scope="col">ID</th>
+														      		<th scope="col">NOME</th>
+														      		<th scope="col">E-MAIL</th>
+														      		<th scope="col">VER</th>
+														    	</tr>
+														  	</thead>
+														  <tbody>
+														      <c:forEach var="usuario" items="${listaUsuarios}">
+														          <tr>
+														              <td> <c:out value="${usuario.id}"></c:out> </td>
+														              <td> <c:out value="${usuario.nome}"></c:out> </td>
+														              <td> <c:out value="${usuario.email}"></c:out> </td>
+														              <td> <a href="<%= request.getContextPath()%>/ServletUsuarioController?acao=editar&idUser=${usuario.id}"class="btn btn-success waves-effect waves-light">VER</a> </td>
+														          </tr> 	
+														      </c:forEach> 
+														  </tbody>
+														</table>
 													</div>
 												</div>
 											</div>
@@ -197,6 +226,32 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 		</div>
 	</div>
 	<jsp:include page="javascriptfile.jsp"></jsp:include>
+	<script type="text/javascript">
+		function limarForm() {
+			var elementos = document.getElementById("formUsuario");
+	
+			for (p = 0; p < elementos.length; p++) {
+				elementos[p].value = '';
+			}
+		}
+		
+		function visualizarImg(fotoUsuario, filefoto) {
+			
+			var preview = document.getElementById(fotoUsuario);
+			var fileUser = document.getElementById(filefoto).files[0];
+			var reader = new FileReader();
+			
+			reader.onloadend = function(){
+				preview.src = reader.result;
+			}
+			
+			if(fileUser){
+				reader.readAsDataURL(fileUser);		
+			}else{
+				preview.src= '';
+			}
+		}
+	</script>
 </body>
 
 </html>

@@ -5158,7 +5158,9 @@ select.form-control:not([size]):not([multiple]) {
   width: 70px; }
 
 .img-80 {
-  width: 80px; }
+  width: 80px;
+  object-fit:cover;
+  }
 
 .img-90 {
   width: 90px; }

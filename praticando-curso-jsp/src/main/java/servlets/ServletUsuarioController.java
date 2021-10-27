@@ -3,6 +3,8 @@ package servlets;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -25,13 +27,39 @@ public class ServletUsuarioController extends ServletGenericUtil {
 	
 	private ModelUsuario modelUsuario = new ModelUsuario();
 	private DAOUsuarioRepository daoUsuarioRepository = new DAOUsuarioRepository();
+	private List<ModelUsuario> modelUsuarios = new ArrayList<ModelUsuario>();
+	
        
     public ServletUsuarioController() {
 
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String acao = request.getParameter("acao");
+		
+		try {
+			
+			
+			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("lista")) {
+				
+				modelUsuarios = daoUsuarioRepository.listaDeUsuarios();
+				
+				request.setAttribute("listaUsuarios", modelUsuarios);
+				request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("editar")) {
+				
+				Long idUser = Long.parseLong(request.getParameter("idUser"));
+				
+				modelUsuario = daoUsuarioRepository.carregarPorId(idUser);
+				
+				modelUsuarios = daoUsuarioRepository.listaDeUsuarios();
 
+				this.redirecionaParaPagUsuario(request, response);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -85,7 +113,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				}
 			}
 
-			if (daoUsuarioRepository.existeLogin(modelUsuario.getLogin())) {
+			if (daoUsuarioRepository.existeLogin(modelUsuario.getLogin()) && modelUsuario.getId() == null) {
 				request.setAttribute("msg", "<div style=\"background-color: #fff3cd;color: #856404;border-color: #856404;\" class='alert alert-warning '><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\r\n"
 						+ "<strong><i class=\"fas fa-exclamation-triangle\"></i> Já existe um usuário com esse login!!! Por favor informe outro login!!</strong></div>");
 			} else {
@@ -95,17 +123,15 @@ public class ServletUsuarioController extends ServletGenericUtil {
 							+ "<strong><i class=\"far fa-check-circle\"></i> Usuário cadastrado com sucesso!!</strong></div>");
 					
 					modelUsuario = daoUsuarioRepository.gravarUsuario(modelUsuario,super.getUserLogado(request));
+					
 				} else {
 					request.setAttribute("msg", "<div style=\"background-color: #d1e7dd;color: #0f5132;border-color: #0f5132;\" class='alert alert-success '><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\r\n"
 							+ "<strong><i class=\"far fa-check-circle\"></i> Atualizado com sucesso!!</strong></div>");
 					
-					modelUsuario = daoUsuarioRepository.atualizaUsuario(modelUsuario,super.getUserLogado(request));
+					modelUsuario = daoUsuarioRepository.atualizaUsuario(modelUsuario);
 				}
-				
-				
-							
 			}
-			
+			modelUsuarios = daoUsuarioRepository.listaDeUsuarios();
 			this.redirecionaParaPagUsuario(request, response);
 			
 		} catch (Exception e) {
@@ -119,6 +145,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 	protected void redirecionaParaPagUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		request.setAttribute("dadosUsuario", modelUsuario);
+		request.setAttribute("listaUsuarios", modelUsuarios);
 		request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
 	}
 
