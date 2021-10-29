@@ -39,9 +39,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 													<div class="card-header">
 														<h5>Cad. Usuário</h5>
 													</div>
-													<div class="card-header">
-														${msg}
-													</div>
+													<div class="card-header">${msg}</div>
 													<div class="card-block">
 														<form class="form-material" enctype="multipart/form-data"
 															id="formUsuario" method="post"
@@ -63,7 +61,8 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 																</div>
 																</br>
 																<div>
-																	<input type="file" name="filefoto" id="filefoto" onchange="visualizarImg('fotoUsuario','filefoto');"
+																	<input type="file" name="filefoto" id="filefoto"
+																		onchange="visualizarImg('fotoUsuario','filefoto');"
 																		accept="image/"
 																		onchange="visualizarImg('fotoembase64','filefoto');"
 																		class="form-contro-file">
@@ -96,7 +95,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 																	class="form-bar"></span> <label class="float-label">Data
 																	de Nascimento:</label>
 															</div>
-															<div  class="form-group form-default form-static-label">
+															<div class="form-group form-default form-static-label">
 																<input id="rendaMensal" type="text" name="rendaMensal"
 																	class="form-control" required="" autocomplete="off"
 																	value="${dadosUsuario.rendaMensal}"> <span
@@ -113,9 +112,18 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 																<select name="perfil" class="form-control"
 																	style="border-style: none; border: none;">
 																	<option value="">Perfil</option>
-																	<option value="ADMIN" <%if(dadosUsuario != null && dadosUsuario.getPerfil().equals("ADMIN")){out.print(" selected ");}%>>ADMIN</option>
-																	<option value="AUXILIAR" <%if(dadosUsuario != null && dadosUsuario.getPerfil().equals("AUXILIAR")){out.print(" selected ");}%>>AUXÍLIAR</option>
-																	<option value="SECRETARIA" <%if(dadosUsuario != null && dadosUsuario.getPerfil().equals("SECRETARIA")){out.print(" selected ");}%>>SECREÁRIA</option>
+																	<option value="ADMIN"
+																		<%if (dadosUsuario != null && dadosUsuario.getPerfil().equals("ADMIN")) {
+	out.print(" selected ");
+}%>>ADMIN</option>
+																	<option value="AUXILIAR"
+																		<%if (dadosUsuario != null && dadosUsuario.getPerfil().equals("AUXILIAR")) {
+	out.print(" selected ");
+}%>>AUXÍLIAR</option>
+																	<option value="SECRETARIA"
+																		<%if (dadosUsuario != null && dadosUsuario.getPerfil().equals("SECRETARIA")) {
+	out.print(" selected ");
+}%>>SECREÁRIA</option>
 																</select>
 															</div>
 															<div class="form-group form-default form-static-label">
@@ -168,15 +176,25 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 															</div>
 															<div class="form-group form-default form-static-label">
 																Sexo:</br> masculino:<input
-																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("MASCULINO")) {out.print(" checked ");}%>
+																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("MASCULINO")) {
+	out.print(" checked ");
+}%>
 																	id="sexo" type="radio" value="MASCULINO"
 																	checked="checked" name="sexo"> feminino:<input
-																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("FEMININO")) {out.print(" checked ");}%>
+																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("FEMININO")) {
+	out.print(" checked ");
+}%>
 																	id="sexo" type="radio" value="FEMININO" name="sexo">
 															</div>
 															<div class="form-group form-default form-static-label">
-																<button onclick="limarForm();" class="btn btn-primary waves-effect waves-light">Limpar Formulario</button>
-																<button type="submit"class="btn btn-success waves-effect waves-light">Salvar</button>
+																<button onclick="limarForm();"
+																	class="btn btn-primary waves-effect waves-light">Limpar
+																	Formulario</button>
+																<button type="submit"
+																	class="btn btn-success waves-effect waves-light">Salvar</button>
+																<button type="button" class="btn btn-primary"
+																	data-toggle="modal" data-target="#exampleModal">
+																	Pesquisar</button>
 															</div>
 														</form>
 													</div>
@@ -192,23 +210,26 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 														</div>
 														<table class="table table-hover">
 															<thead>
-														    	<tr>
-														      		<th scope="col">ID</th>
-														      		<th scope="col">NOME</th>
-														      		<th scope="col">E-MAIL</th>
-														      		<th scope="col">VER</th>
-														    	</tr>
-														  	</thead>
-														  <tbody>
-														      <c:forEach var="usuario" items="${listaUsuarios}">
-														          <tr>
-														              <td> <c:out value="${usuario.id}"></c:out> </td>
-														              <td> <c:out value="${usuario.nome}"></c:out> </td>
-														              <td> <c:out value="${usuario.email}"></c:out> </td>
-														              <td> <a href="<%= request.getContextPath()%>/ServletUsuarioController?acao=editar&idUser=${usuario.id}"class="btn btn-success waves-effect waves-light">VER</a> </td>
-														          </tr> 	
-														      </c:forEach> 
-														  </tbody>
+																<tr>
+																	<th scope="col">ID</th>
+																	<th scope="col">NOME</th>
+																	<th scope="col">E-MAIL</th>
+																	<th scope="col">VER</th>
+																</tr>
+															</thead>
+															<tbody>
+																<c:forEach var="usuario" items="${listaUsuarios}">
+																	<tr>
+																		<td><c:out value="${usuario.id}"></c:out></td>
+																		<td><c:out value="${usuario.nome}"></c:out></td>
+																		<td><c:out value="${usuario.email}"></c:out></td>
+																		<td><a
+																			href="<%= request.getContextPath()%>/ServletUsuarioController?acao=editar&idUser=${usuario.id}"
+																			class="btn btn-success waves-effect waves-light">VER</a>
+																		</td>
+																	</tr>
+																</c:forEach>
+															</tbody>
 														</table>
 													</div>
 												</div>
@@ -225,30 +246,113 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 			</div>
 		</div>
 	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Pesquisa de
+						Usuário</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" placeholder="Nome"
+							id="nomeBuscar" aria-label="Recipient's username"
+							aria-describedby="basic-addon2">
+						<div class="input-group-append">
+							<button class="btn btn-success waves-effect waves-light"
+								type="button" onclick="buscarUser()">Pesquisar</button>
+						</div>
+					</div>
+					<table id="tabelaResultados" class="table">
+						<thead>
+							<tr  >
+								<th  scope="col">ID</th>
+								<th  scope="col">NOME</th>
+								<th  scope="col">VER</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<jsp:include page="javascriptfile.jsp"></jsp:include>
 	<script type="text/javascript">
 		function limarForm() {
 			var elementos = document.getElementById("formUsuario");
-	
+
 			for (p = 0; p < elementos.length; p++) {
 				elementos[p].value = '';
 			}
 		}
-		
+
 		function visualizarImg(fotoUsuario, filefoto) {
-			
+
 			var preview = document.getElementById(fotoUsuario);
 			var fileUser = document.getElementById(filefoto).files[0];
 			var reader = new FileReader();
-			
-			reader.onloadend = function(){
+
+			reader.onloadend = function() {
 				preview.src = reader.result;
 			}
-			
-			if(fileUser){
-				reader.readAsDataURL(fileUser);		
-			}else{
-				preview.src= '';
+
+			if (fileUser) {
+				reader.readAsDataURL(fileUser);
+			} else {
+				preview.src = '';
+			}
+		}
+		//buscar com ajax
+		function buscarUser() {
+
+			var nomeBuscar = document.getElementById('nomeBuscar').value;
+
+			if (nomeBuscar != null && nomeBuscar != ''
+					&& nomeBuscar.trim() != '') {
+
+				var urlAction = document.getElementById('formUsuario').action;
+
+				$('#tabelaResultados > tbody > tr').remove();
+				$("#ulPaginacaoAjax > li").remove();
+				
+				$.ajax({
+					method : 'get',
+					url : urlAction,
+					data : "nomeBuscar=" + nomeBuscar
+							+ "&acao=buscarAjax",
+					success : function(response, textStatus,
+							xhr) {
+
+						var json = JSON.parse(response);
+
+						for (var p = 0; p < json.length; p++) {
+							$('#tabelaResultados > tbody')
+									.append('<tr><td>'+ json[p].id+ '</td><td>'+ json[p].nome
+											+ '</td>'+ '<td> <button type="button" class="btn btn-primary" onclick="verEditar('
+											+ json[p].id + ')">info</button> </td></tr>');
+						}
+
+					}
+
+				}).fail(function(xhr, status, errorThrown) {
+					alert('Erro ao buscar usuario por nome:'
+							+ xhr.responseText);
+				});
 			}
 		}
 	</script>

@@ -17,6 +17,8 @@ import javax.servlet.http.Part;
 import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dao.DAOUsuarioRepository;
 import model.ModelUsuario;
 
@@ -55,6 +57,17 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				modelUsuarios = daoUsuarioRepository.listaDeUsuarios();
 
 				this.redirecionaParaPagUsuario(request, response);
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscarAjax")) {
+				
+				String nomeBuscar = request.getParameter("nomeBuscar");
+				
+				List<ModelUsuario> usuarios = daoUsuarioRepository.listaUsuariosLike(nomeBuscar);
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				String json = objectMapper.writeValueAsString(usuarios);
+				
+				response.getWriter().write(json);
+				
 			}
 			
 		} catch (Exception e) {

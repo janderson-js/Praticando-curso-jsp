@@ -114,7 +114,7 @@ public class DAOUsuarioRepository implements Serializable{
 		
 		List<ModelUsuario> usuarios = new ArrayList<ModelUsuario>();
 		
-		String sql = "select id, nome, email from model_usuario";
+		String sql = "select id, nome, email from model_usuario order by id asc";
 		PreparedStatement pstm = connection.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		while (rs.next()) {
@@ -222,6 +222,31 @@ public class DAOUsuarioRepository implements Serializable{
 		}
 		
 		return modelUsuario;
+	}
+
+	public List<ModelUsuario> listaUsuariosLike(String nomeBuscar) throws Exception{
+		
+		List<ModelUsuario> usuarios = new ArrayList<ModelUsuario>();
+		
+		String sql = "select id, nome, email from model_usuario where upper(nome) like upper(?) order by id asc";
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setString(1, "%"+ nomeBuscar + "%");
+		ResultSet rs = pstm.executeQuery();
+		while (rs.next()) {
+			
+			ModelUsuario modelUsuario = new ModelUsuario();
+			
+			modelUsuario.setId(rs.getLong("id"));
+			modelUsuario.setNome(rs.getString("nome"));
+			
+			usuarios.add(modelUsuario);
+			
+		}
+		
+		pstm.execute();
+		connection.commit();
+		
+		return usuarios;
 	}
 
 }

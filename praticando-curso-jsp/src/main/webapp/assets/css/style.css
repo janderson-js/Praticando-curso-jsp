@@ -26,6 +26,15 @@ File: style.css
 /**  =====================
       Custom css start
 ==========================  **/
+
+/* personalizado start*/
+ .form-material .form-default.form-static-label .float-label{
+	       color: black;
+	      }
+	      #tabelaResultados th, td{
+							text-align: center;
+		} 
+/* personalizado end*/
 body {
   background-color: #f3f3f3;
   font-size: 0.875em;

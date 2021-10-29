@@ -37,12 +37,6 @@
       <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/assets/css/style.css">
       <link href="https://code.jquery.com/ui/1.9.1/themes/smoothness/jquery-ui.css" rel="stylesheet">
       
-      <style type="text/css">
-	      .form-material .form-default.form-static-label .float-label{
-	       color: black;
-	      } 
-      </style>
-      
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
       
   </head>
