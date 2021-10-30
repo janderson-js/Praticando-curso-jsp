@@ -37,9 +37,9 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 											<div class="col-sm-12">
 												<div class="card">
 													<div class="card-header">
-														<h5>Cad. Usuário</h5>
+														<h5>Cad. Usuário</h5></br></br>
+														<span id="msg">${msg}</span>
 													</div>
-													<div class="card-header">${msg}</div>
 													<div class="card-block">
 														<form class="form-material" enctype="multipart/form-data"
 															id="formUsuario" method="post"
@@ -286,7 +286,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 				elementos[p].value = '';
 			}
 		}
-
+		// Preview de imagem de usuario
 		function visualizarImg(fotoUsuario, filefoto) {
 
 			var preview = document.getElementById(fotoUsuario);
@@ -358,8 +358,9 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 						success : function(response, textStatus,xhr) {
 							
 							limarForm();
-							document.getElementById('msg').textContent = response;
 							
+							$('#msg').append("<div style=\"background-color: #d1e7dd;color: #0f5132;border-color: #0f5132;\" class='alert alert-success '><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\r\n"
+							+ "<strong><i class=\"far fa-check-circle\"></i> Usuário Excluido com sucesso!!</strong></div>");
 						}
 						
 					}).fail(function(xhr, status, errorThrown) {

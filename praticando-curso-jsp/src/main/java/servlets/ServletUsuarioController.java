@@ -74,9 +74,9 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				
 				daoUsuarioRepository.deletarUsuario(Long.parseLong(idUser));
 				
-				response.getWriter().write("<div style=\\\"background-color: #d1e7dd;color: #0f5132;border-color: #0f5132;\\\" class='alert alert-success '><a href=\\\"#\\\" class=\\\"close\\\" data-dismiss=\\\"alert\\\" aria-label=\\\"close\\\">&times;</a>\\r\\n\"\r\n"
-						+ "							+ \"<strong><i class=\\\"far fa-check-circle\\\"></i> Usuário Excluido com sucesso!!</strong></div>");
-				
+				modelUsuarios = daoUsuarioRepository.listaDeUsuarios();
+				request.setAttribute("listaUsuarios", modelUsuarios);
+
 			}
 			
 		} catch (Exception e) {
@@ -144,7 +144,9 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					request.setAttribute("msg", "<div style=\"background-color: #d1e7dd;color: #0f5132;border-color: #0f5132;\" class='alert alert-success '><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\r\n"
 							+ "<strong><i class=\"far fa-check-circle\"></i> Usuário cadastrado com sucesso!!</strong></div>");
 					
-					modelUsuario = daoUsuarioRepository.gravarUsuario(modelUsuario,super.getUserLogado(request));
+					daoUsuarioRepository.gravarUsuario(modelUsuario,super.getUserLogado(request));
+					modelUsuario = daoUsuarioRepository.consultarUsuarioLogin(modelUsuario.getLogin());
+					
 					
 				} else {
 					request.setAttribute("msg", "<div style=\"background-color: #d1e7dd;color: #0f5132;border-color: #0f5132;\" class='alert alert-success '><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\r\n"

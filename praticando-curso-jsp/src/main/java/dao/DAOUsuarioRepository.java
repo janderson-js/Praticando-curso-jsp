@@ -159,11 +159,45 @@ public class DAOUsuarioRepository implements Serializable{
 		ResultSet rs = pstm.executeQuery();
 		
 		if(rs.next()) {
+			
 			modelUsuario.setId(rs.getLong("id"));
 			modelUsuario.setNome(rs.getString("nome"));
 			modelUsuario.setPerfil(rs.getString("perfil"));
 			modelUsuario.setLogin(rs.getString("login"));
 			modelUsuario.setFotoUser(rs.getString("foto_user"));
+		}
+		
+		return modelUsuario;
+	}
+	public ModelUsuario consultarUsuarioLogin(String login) throws Exception  {
+		
+		modelUsuario = new ModelUsuario();
+		
+		String sql = "select * from model_usuario where upper(login) = upper(?)";
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setString(1, login);
+		ResultSet rs = pstm.executeQuery();
+		
+		if(rs.next()) {
+			modelUsuario.setId(rs.getLong("id"));
+			modelUsuario.setNome(rs.getString("nome"));
+			modelUsuario.setCpf(rs.getString("cpf"));
+			modelUsuario.setDataNascimento(rs.getDate("data_nascimento"));
+			modelUsuario.setRendaMensal(rs.getDouble("renda_mensal"));
+			modelUsuario.setEmail(rs.getString("email"));
+			modelUsuario.setPerfil(rs.getString("perfil"));
+			modelUsuario.setLogin(rs.getString("login"));
+			modelUsuario.setSenha(rs.getString("senha"));
+			modelUsuario.setCep(rs.getString("cep"));
+			modelUsuario.setUf(rs.getString("uf"));
+			modelUsuario.setCidade(rs.getString("cidade"));
+			modelUsuario.setBairro(rs.getString("bairro"));
+			modelUsuario.setLogradouro(rs.getString("logradouro"));
+			modelUsuario.setNumero(rs.getString("numero"));
+			modelUsuario.setSexo(rs.getString("sexo"));
+			modelUsuario.setFotoUser(rs.getString("foto_user"));
+			
+			
 		}
 		
 		return modelUsuario;
