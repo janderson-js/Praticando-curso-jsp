@@ -113,17 +113,11 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 																	style="border-style: none; border: none;">
 																	<option value="">Perfil</option>
 																	<option value="ADMIN"
-																		<%if (dadosUsuario != null && dadosUsuario.getPerfil().equals("ADMIN")) {
-	out.print(" selected ");
-}%>>ADMIN</option>
+																		<%if (dadosUsuario != null && dadosUsuario.getPerfil().equals("ADMIN")) {out.print(" selected ");}%>>ADMIN</option>
 																	<option value="AUXILIAR"
-																		<%if (dadosUsuario != null && dadosUsuario.getPerfil().equals("AUXILIAR")) {
-	out.print(" selected ");
-}%>>AUXÍLIAR</option>
+																		<%if (dadosUsuario != null && dadosUsuario.getPerfil().equals("AUXILIAR")) {out.print(" selected ");}%>>AUXÍLIAR</option>
 																	<option value="SECRETARIA"
-																		<%if (dadosUsuario != null && dadosUsuario.getPerfil().equals("SECRETARIA")) {
-	out.print(" selected ");
-}%>>SECREÁRIA</option>
+																		<%if (dadosUsuario != null && dadosUsuario.getPerfil().equals("SECRETARIA")) {out.print(" selected ");}%>>SECREÁRIA</option>
 																</select>
 															</div>
 															<div class="form-group form-default form-static-label">
@@ -176,25 +170,17 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 															</div>
 															<div class="form-group form-default form-static-label">
 																Sexo:</br> masculino:<input
-																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("MASCULINO")) {
-	out.print(" checked ");
-}%>
+																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("MASCULINO")) {out.print(" checked ");}%>
 																	id="sexo" type="radio" value="MASCULINO"
 																	checked="checked" name="sexo"> feminino:<input
-																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("FEMININO")) {
-	out.print(" checked ");
-}%>
+																	<%if (dadosUsuario != null && !dadosUsuario.getSexo().equals(null) && dadosUsuario.getSexo().equals("FEMININO")) {out.print(" checked ");}%>
 																	id="sexo" type="radio" value="FEMININO" name="sexo">
 															</div>
 															<div class="form-group form-default form-static-label">
-																<button onclick="limarForm();"
-																	class="btn btn-primary waves-effect waves-light">Limpar
-																	Formulario</button>
-																<button type="submit"
-																	class="btn btn-success waves-effect waves-light">Salvar</button>
-																<button type="button" class="btn btn-primary"
-																	data-toggle="modal" data-target="#exampleModal">
-																	Pesquisar</button>
+																<button onclick="limarForm();" class="btn btn-secondary waves-effect waves-light">Limpar Formulario</button>
+																<button type="submit" class="btn btn-success waves-effect waves-light">Salvar</button>
+																<button type="button" onclick="deletarAjax();" class="btn btn-danger waves-effect waves-light">Excluir</button>
+																<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Pesquisar</button>
 															</div>
 														</form>
 													</div>
@@ -208,7 +194,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 														<div class="card-header">
 															<h5>Lista de Usuário</h5>
 														</div>
-														<table class="table table-hover">
+														<table id="tableListaUsuario" class="table table-hover">
 															<thead>
 																<tr>
 																	<th scope="col">ID</th>
@@ -335,15 +321,14 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 					url : urlAction,
 					data : "nomeBuscar=" + nomeBuscar
 							+ "&acao=buscarAjax",
-					success : function(response, textStatus,
-							xhr) {
+					success : function(response, textStatus,xhr) {
 
 						var json = JSON.parse(response);
 
 						for (var p = 0; p < json.length; p++) {
 							$('#tabelaResultados > tbody')
 									.append('<tr><td>'+ json[p].id+ '</td><td>'+ json[p].nome
-											+ '</td>'+ '<td> <button type="button" class="btn btn-primary" onclick="verEditar('
+											+ '</td>'+ '<td> <button type="button" class="btn btn-info" onclick="verEditar('
 											+ json[p].id + ')">info</button> </td></tr>');
 						}
 
@@ -354,6 +339,37 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 							+ xhr.responseText);
 				});
 			}
+		}
+		// Deletar com ajax
+		function deletarAjax() {
+			
+			var urlAction = document.getElementById("formUsuario").action; 
+			var idUser = document.getElementById("id").value;
+			var nome = document.getElementById("nome").value;
+			
+			if(idUser != null && idUser != '' && idUser.trim() != ''){
+				if(confirm("Deseja Excluir o usuário: "+ nome +"?")){
+					
+					$.ajax({
+						
+						method : "get",
+						url : urlAction,
+						data : "idUser=" + idUser + "&acao=deletarAjax",
+						success : function(response, textStatus,xhr) {
+							
+							limarForm();
+							document.getElementById('msg').textContent = response;
+							
+						}
+						
+					}).fail(function(xhr, status, errorThrown) {
+						alert('Erro ao buscar usuario por nome:'
+								+ xhr.responseText);
+					});
+				}
+			}else{
+				alert("Nenhum usuário selecionado para Excluir!!");
+			};
 		}
 	</script>
 </body>
