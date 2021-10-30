@@ -249,4 +249,14 @@ public class DAOUsuarioRepository implements Serializable{
 		return usuarios;
 	}
 
+	public void deletarUsuario(Long idUser) throws Exception {
+		
+		String sql = "DELETE FROM model_usuario WHERE id=?;";
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setLong(1, idUser);
+		
+		pstm.execute();
+		connection.commit();
+	}
+
 }

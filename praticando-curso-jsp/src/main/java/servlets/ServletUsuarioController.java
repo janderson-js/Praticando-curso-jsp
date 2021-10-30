@@ -72,7 +72,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				
 				String idUser = request.getParameter("idUser");
 				
-				daoUsuarioRepository.deletar(Long.parseLong(idUser));
+				daoUsuarioRepository.deletarUsuario(Long.parseLong(idUser));
 				
 				response.getWriter().write("<div style=\\\"background-color: #d1e7dd;color: #0f5132;border-color: #0f5132;\\\" class='alert alert-success '><a href=\\\"#\\\" class=\\\"close\\\" data-dismiss=\\\"alert\\\" aria-label=\\\"close\\\">&times;</a>\\r\\n\"\r\n"
 						+ "							+ \"<strong><i class=\\\"far fa-check-circle\\\"></i> Usuário Excluido com sucesso!!</strong></div>");
