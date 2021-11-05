@@ -217,6 +217,14 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 																</c:forEach>
 															</tbody>
 														</table>
+														<div class="d-flex justify-content-center">
+															<nav aria-label="Page navigation example">
+															  <ul id="pag" class="pagination">
+															    
+															  </ul>
+															</nav>
+														</div>
+														<div>Resultado: 2</div>
 													</div>
 												</div>
 											</div>
@@ -256,7 +264,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 								type="button" onclick="buscarUser()">Pesquisar</button>
 						</div>
 					</div>
-					<table id="tabelaResultados" class="table">
+					<table id="tabelaResultados"  class="table">
 						<thead>
 							<tr  >
 								<th  scope="col">ID</th>
@@ -279,6 +287,34 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 
 	<jsp:include page="javascriptfile.jsp"></jsp:include>
 	<script type="text/javascript">
+		window.onload =  function () {
+			
+			var url = document.getElementById("formUsuario").action;
+			var urlOffset = new URL(window.location.href.toString());
+			var offSet = urlOffset.searchParams.get("offset");
+			var previous = 0;
+			var next = 5;
+			
+			if(offSet > 0){
+				previous =  parseInt(offSet , 10) - parseInt(previous, 10);
+				next = parseInt(offSet , 10) + parseInt(next, 10);
+			}
+			
+			
+			
+			
+			
+			
+			$('#pag').append('<li class="page-item "><a id="url" class="page-link" href='+url+'?acao=lista&offset='+previous+' aria-label="Previous"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>');
+			for(var i = 0; i<3;i++){
+				$('#pag').append('<li class="page-item "><a class="page-link" href='+url+'?acao=lista&offset='+i+'>1</a></li>');
+			}
+			$('#pag').append('<li class="page-item "><a  class="page-link" href='+url+'?acao=lista&offset='+next+' aria-label="Next"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>');		
+						
+		}
+		
+		
+		
 		function limarForm() {
 			var elementos = document.getElementById("formUsuario");
 
