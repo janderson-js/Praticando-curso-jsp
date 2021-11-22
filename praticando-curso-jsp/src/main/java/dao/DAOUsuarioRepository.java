@@ -114,7 +114,7 @@ public class DAOUsuarioRepository implements Serializable{
 		
 		List<ModelUsuario> usuarios = new ArrayList<ModelUsuario>();
 		
-		String sql = "select id, nome, email from model_usuario order by id asc";
+		String sql = "select id, nome, email from model_usuario order by id asc limit 5";
 		PreparedStatement pstm = connection.prepareStatement(sql);
 		ResultSet rs = pstm.executeQuery();
 		while (rs.next()) {
@@ -133,6 +133,55 @@ public class DAOUsuarioRepository implements Serializable{
 		connection.commit();
 		
 		return usuarios;
+	}
+	public List<ModelUsuario> listaDeUsuariosAjax(String offSet) throws Exception{
+		
+		List<ModelUsuario> usuarios = new ArrayList<ModelUsuario>();
+		
+		String sql = "select id, nome, email from model_usuario order by id asc  offset ? limit 5";
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setLong(1, Long.parseLong(offSet));
+		ResultSet rs = pstm.executeQuery();
+		while (rs.next()) {
+			
+			ModelUsuario modelUsuario = new ModelUsuario();
+			
+			modelUsuario.setId(rs.getLong("id"));
+			modelUsuario.setNome(rs.getString("nome"));
+			modelUsuario.setEmail(rs.getString("email"));
+			
+			usuarios.add(modelUsuario);
+			
+		}
+		
+		pstm.execute();
+		connection.commit();
+		
+		return usuarios;
+	}
+	
+	public int totalPagina() throws Exception {
+		
+		String sql = "select count(1) as total from model_usuario";
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);		
+		ResultSet rs = pstm.executeQuery();
+		
+		rs.next();
+		
+		Double cadastro = rs.getDouble("total");
+		
+		Double porpagina = 5.0;
+		
+		Double pagina = cadastro / porpagina;
+		
+		Double resto = pagina % 2;
+		
+		if(resto > 1) {
+			pagina ++;
+		}
+		
+		return pagina.intValue();
 	}
 	
 	public boolean existeLogin(String login) throws Exception{
@@ -262,9 +311,34 @@ public class DAOUsuarioRepository implements Serializable{
 		
 		List<ModelUsuario> usuarios = new ArrayList<ModelUsuario>();
 		
-		String sql = "select id, nome, email from model_usuario where upper(nome) like upper(?) order by id asc";
+		String sql = "select id, nome, email from model_usuario where upper(nome) like upper(?) order by id asc limit 5";
 		PreparedStatement pstm = connection.prepareStatement(sql);
 		pstm.setString(1, "%"+ nomeBuscar + "%");
+		ResultSet rs = pstm.executeQuery();
+		while (rs.next()) {
+			
+			ModelUsuario modelUsuario = new ModelUsuario();
+			
+			modelUsuario.setId(rs.getLong("id"));
+			modelUsuario.setNome(rs.getString("nome"));
+			
+			usuarios.add(modelUsuario);
+			
+		}
+		
+		pstm.execute();
+		connection.commit();
+		
+		return usuarios;
+	}
+	public List<ModelUsuario> listaUsuariosLikeAjaxPag(String nomeBuscar, Long offset) throws Exception{
+		
+		List<ModelUsuario> usuarios = new ArrayList<ModelUsuario>();
+		
+		String sql = "select id, nome, email from model_usuario where upper(nome) like upper(?) order by id asc offset ? limit 5";
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setString(1, "%"+ nomeBuscar + "%");
+		pstm.setLong(2, offset);
 		ResultSet rs = pstm.executeQuery();
 		while (rs.next()) {
 			

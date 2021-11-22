@@ -190,7 +190,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 										<div class="row">
 											<div class="col-sm-12">
 												<div class="card">
-													<div class="card-block">
+													<div class="card-block" style="overflow: scroll; height: 500px;">
 														<div class="card-header">
 															<h5>Lista de Usuário</h5>
 														</div>
@@ -204,17 +204,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 																</tr>
 															</thead>
 															<tbody>
-																<c:forEach var="usuario" items="${listaUsuarios}">
-																	<tr>
-																		<td><c:out value="${usuario.id}"></c:out></td>
-																		<td><c:out value="${usuario.nome}"></c:out></td>
-																		<td><c:out value="${usuario.email}"></c:out></td>
-																		<td><a
-																			href="<%= request.getContextPath()%>/ServletUsuarioController?acao=editar&idUser=${usuario.id}"
-																			class="btn btn-success waves-effect waves-light">VER</a>
-																		</td>
-																	</tr>
-																</c:forEach>
+																
 															</tbody>
 														</table>
 														<div class="d-flex justify-content-center">
@@ -224,7 +214,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 															  </ul>
 															</nav>
 														</div>
-														<div>Resultado: 2</div>
+														<div id="total"></div>
 													</div>
 												</div>
 											</div>
@@ -244,7 +234,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
+		<div  class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Pesquisa de
@@ -254,7 +244,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body" style="overflow: scroll; height: 500px;">
 					<div class="input-group mb-3">
 						<input type="text" class="form-control" placeholder="Nome"
 							id="nomeBuscar" aria-label="Recipient's username"
@@ -276,9 +266,17 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 							
 						</tbody>
 					</table>
+					<div class="d-flex justify-content-center">
+						<nav aria-label="Page navigation example">
+							<ul id="pagModal" class="pagination">
+															    
+							</ul>
+						</nav>
+					</div>
+					<div id="totalPagModal"></div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
+					<button  type="button" class="btn btn-secondary"
 						data-dismiss="modal">Fechar</button>
 				</div>
 			</div>
@@ -287,33 +285,112 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 
 	<jsp:include page="javascriptfile.jsp"></jsp:include>
 	<script type="text/javascript">
+	
 		window.onload =  function () {
 			
 			var url = document.getElementById("formUsuario").action;
-			var urlOffset = new URL(window.location.href.toString());
-			var offSet = urlOffset.searchParams.get("offset");
-			var previous = 0;
-			var next = 5;
-			
-			if(offSet > 0){
-				previous =  parseInt(offSet , 10) - parseInt(previous, 10);
-				next = parseInt(offSet , 10) + parseInt(next, 10);
-			}
-			
-			
-			
-			
-			
-			
-			$('#pag').append('<li class="page-item "><a id="url" class="page-link" href='+url+'?acao=lista&offset='+previous+' aria-label="Previous"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>');
-			for(var i = 0; i<3;i++){
-				$('#pag').append('<li class="page-item "><a class="page-link" href='+url+'?acao=lista&offset='+i+'>1</a></li>');
-			}
-			$('#pag').append('<li class="page-item "><a  class="page-link" href='+url+'?acao=lista&offset='+next+' aria-label="Next"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>');		
 						
+			$.ajax({
+				
+				method : "get",
+				url : url,
+				data : "acao=paginar",
+				success : function(response, textStatus,xhr) {
+
+					var json = JSON.parse(response);
+					
+					$('#tableListaUsuario > tbody > tr').remove();
+					$("#pag > li").remove();
+																			
+					for (var p = 0; p < json.length; p++) {
+						
+						if(json[p].email == null){
+							
+							json[p].email = "     ";
+							
+						}
+						
+						$('#tableListaUsuario > tbody').append('<tr><td>'+ json[p].id+ '</td><td>'+ json[p].nome+ '</td><td>'+ json[p].email + '</td>'
+								+ '<td> <button class="btn btn-success" onclick="editar('+ json[p].id +');">ver</a> </td></tr>');;
+					}
+					
+					var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjax");
+					
+					for(var i = 0; i < totalPaginaAjax; i++){
+						var url = "acao=listaAjax&pagina=" + i*5; 
+						$('#pag').append('<li class="page-item"><a class="page-link" href="#" onclick="listaOffSet(\''+url+'\')">'+(i+1)+'</a></li>');
+						
+					}
+					
+					document.getElementById('total').textContent = 'Resultados: '+totalPaginaAjax;
+					
+				}
+				
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuario por nome:'
+						+ xhr.responseText);
+			});
+			
 		}
 		
+		function listaOffSet(url){
+			
+			var urlAction = document.getElementById("formUsuario").action;
+			
+			$.ajax({
+				
+				method : "get",
+				url : urlAction,
+				data : url,
+				success : function(response, textStatus,xhr) {
+
+					var json = JSON.parse(response);
+														
+					$('#tableListaUsuario > tbody > tr').remove();
+					$("#pag > li").remove();
+					
+					for (var p = 0; p < json.length; p++) {
+						
+						if(json[p].email == null){
+							
+							json[p].email = "     ";
+							
+						}
+						
+						$('#tableListaUsuario > tbody').append('<tr><td>'+ json[p].id+ '</td><td>'+ json[p].nome+ '</td><td>'+ json[p].email + '</td>'
+								+ '<td> <button class="btn btn-success" onclick="editar('+ json[p].id +');">ver</a> </td></tr>');;
+					}
+					
+					var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjax");
+					
+					for(var i = 0; i < totalPaginaAjax; i++){
+						
+						var url = "acao=listaAjax&pagina=" + i*5; 
+						
+						$('#pag').append('<li class="page-item"><a class="page-link" href="#" onclick="listaOffSet(\''+url+'\')">'+(i+1)+'</a></li>');
+						
+					}
+					
+					scroll();
+					
+				}
+				
+				}).fail(function(xhr, status, errorThrown) {
+					alert('Erro ao buscar usuario por nome:'
+						+ xhr.responseText);
+				});
+			}
 		
+		function scroll(){
+			var pos = $("#tableListaUsuario").offset().top;
+			window.scrollBy(0,pos);
+		}
+		
+		function editar(id) {
+			var urlAction = document.getElementById('formUsuario').action;
+			
+			window.location.href = urlAction + '?acao=editar&idUser='+id;
+		}
 		
 		function limarForm() {
 			var elementos = document.getElementById("formUsuario");
@@ -350,7 +427,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 				var urlAction = document.getElementById('formUsuario').action;
 
 				$('#tabelaResultados > tbody > tr').remove();
-				$("#ulPaginacaoAjax > li").remove();
+				$("#pagModal > li").remove();
 				
 				$.ajax({
 					method : 'get',
@@ -360,6 +437,8 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 					success : function(response, textStatus,xhr) {
 
 						var json = JSON.parse(response);
+						
+						var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjax");
 
 						for (var p = 0; p < json.length; p++) {
 							$('#tabelaResultados > tbody')
@@ -367,6 +446,64 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 											+ '</td>'+ '<td> <button type="button" class="btn btn-info" onclick="verEditar('
 											+ json[p].id + ')">info</button> </td></tr>');
 						}
+						
+						for(var i = 0; i < totalPaginaAjax; i++){
+							
+							var url ="nomeBuscar="+ nomeBuscar + "&acao=buscarAjaxPagina&pagina="+(i*5);
+							
+							$('#pagModal').append('<li class="page-item"><a class="page-link" href="#" onclick="listaOffsetModal(\''+url+'\')">'+(i+1)+'</a></li>');
+							
+						}
+						
+						document.getElementById('totalPagModal').textContent = 'Resultados: '+totalPaginaAjax;
+
+					}
+
+				}).fail(function(xhr, status, errorThrown) {
+					alert('Erro ao buscar usuario por nome:'
+							+ xhr.responseText);
+				});
+			}
+		}
+		function listaOffsetModal(url) {
+
+			var nomeBuscar = document.getElementById('nomeBuscar').value;
+
+			if (nomeBuscar != null && nomeBuscar != ''
+					&& nomeBuscar.trim() != '') {
+
+				var urlAction = document.getElementById('formUsuario').action;
+
+				$('#tabelaResultados > tbody > tr').remove();
+				$("#pagModal > li").remove();
+				
+				
+				$.ajax({
+					method : 'get',
+					url : urlAction,
+					data : url,
+					success : function(response, textStatus,xhr) {
+
+						var json = JSON.parse(response);
+						
+						var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjax");
+
+						for (var p = 0; p < json.length; p++) {
+							$('#tabelaResultados > tbody')
+									.append('<tr><td>'+ json[p].id+ '</td><td>'+ json[p].nome
+											+ '</td>'+ '<td> <button type="button" class="btn btn-info" onclick="verEditar('
+											+ json[p].id + ')">info</button> </td></tr>');
+						}
+						
+						for(var i = 0; i < totalPaginaAjax; i++){
+							
+							var url ="nomeBuscar="+ nomeBuscar + "&acao=buscarAjaxPagina&pagina="+(i*5);
+							
+							$('#pagModal').append('<li class="page-item"><a class="page-link" href="#" onclick="listaOffsetModal(\''+url+'\')">'+(i+1)+'</a></li>');
+							
+						}
+						
+						document.getElementById('totalPagModal').textContent = 'Resultados: '+totalPaginaAjax;
 
 					}
 

@@ -66,9 +66,23 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				ObjectMapper objectMapper = new ObjectMapper();
 				String json = objectMapper.writeValueAsString(usuarios);
 				
+				response.addHeader("totalPaginaAjax", ""+ daoUsuarioRepository.totalPagina());
 				response.getWriter().write(json);
 				
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscarAjaxPagina")) {
+				
+				String nomeBuscar = request.getParameter("nomeBuscar");
+				String offSet = request.getParameter("pagina");				
+				
+				List<ModelUsuario> usuarios = daoUsuarioRepository.listaUsuariosLikeAjaxPag(nomeBuscar,Long.parseLong(offSet));
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				String json = objectMapper.writeValueAsString(usuarios);
+				
+				response.addHeader("totalPaginaAjax", ""+ daoUsuarioRepository.totalPagina());
+				response.getWriter().write(json);
+				
+			} if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
 				
 				String idUser = request.getParameter("idUser");
 				
@@ -77,6 +91,27 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				modelUsuarios = daoUsuarioRepository.listaDeUsuarios();
 				request.setAttribute("listaUsuarios", modelUsuarios);
 
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("paginar")) {
+				
+				List<ModelUsuario> usuarios = daoUsuarioRepository.listaDeUsuarios();
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				String json = objectMapper.writeValueAsString(usuarios);
+				
+				response.addHeader("totalPaginaAjax", ""+ daoUsuarioRepository.totalPagina());
+				response.getWriter().write(json);
+				
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listaAjax")) {
+				String offSet = request.getParameter("pagina");
+				
+				List<ModelUsuario> usuarios = daoUsuarioRepository.listaDeUsuariosAjax(offSet);
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				String json = objectMapper.writeValueAsString(usuarios);
+				
+				response.addHeader("totalPaginaAjax", ""+ daoUsuarioRepository.totalPagina());
+				response.getWriter().write(json);
+				
 			}
 			
 		} catch (Exception e) {
