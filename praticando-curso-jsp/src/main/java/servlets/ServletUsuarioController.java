@@ -23,7 +23,7 @@ import dao.DAOUsuarioRepository;
 import model.ModelUsuario;
 
 @MultipartConfig
-@WebServlet("/ServletUsuarioController")
+@WebServlet(urlPatterns = {"/servletUsuarioController","/ServletUsuarioController"})
 public class ServletUsuarioController extends ServletGenericUtil {
 	private static final long serialVersionUID = 1L;
 	
@@ -66,7 +66,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				ObjectMapper objectMapper = new ObjectMapper();
 				String json = objectMapper.writeValueAsString(usuarios);
 				
-				response.addHeader("totalPaginaAjax", ""+ daoUsuarioRepository.totalPagina());
+				response.addHeader("totalPaginaAjaxModal", ""+ daoUsuarioRepository.totalPaginaModal(nomeBuscar));
 				response.getWriter().write(json);
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscarAjaxPagina")) {
@@ -79,7 +79,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				ObjectMapper objectMapper = new ObjectMapper();
 				String json = objectMapper.writeValueAsString(usuarios);
 				
-				response.addHeader("totalPaginaAjax", ""+ daoUsuarioRepository.totalPagina());
+				response.addHeader("totalPaginaAjaxModal", ""+ daoUsuarioRepository.totalPaginaModal(nomeBuscar));
 				response.getWriter().write(json);
 				
 			} if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {

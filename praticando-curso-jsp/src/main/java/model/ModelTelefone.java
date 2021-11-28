@@ -9,10 +9,25 @@ public class ModelTelefone implements Serializable {
 	private Long id;
 	private String numero;
 	
-	private ModelUsuario idUser;
-	private ModelUsuario idCad;
+	private Long idUser;
 	
+	public boolean isNovo() {
+		
+		if(this.id == null) {
+			return true;
+		}else if(this.id != null && this.id > 0) {
+			return false;
+		}
+		
+		return id == null;
+	}
 	
+	public Long getIdUser() {
+		return idUser;
+	}
+	public void setIdUser(Long idUser) {
+		this.idUser = idUser;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -24,17 +39,5 @@ public class ModelTelefone implements Serializable {
 	}
 	public void setNumero(String numero) {
 		this.numero = numero;
-	}
-	public ModelUsuario getIdUser() {
-		return idUser;
-	}
-	public void setIdUser(ModelUsuario idUser) {
-		this.idUser = idUser;
-	}
-	public ModelUsuario getIdCad() {
-		return idCad;
-	}
-	public void setIdCad(ModelUsuario idCad) {
-		this.idCad = idCad;
 	}
 }

@@ -184,6 +184,31 @@ public class DAOUsuarioRepository implements Serializable{
 		return pagina.intValue();
 	}
 	
+	public int totalPaginaModal(String nome) throws Exception {
+		
+		String sql = "select count(1) as total from model_usuario where upper(nome) like upper(?) ";
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);	
+		pstm.setString(1, "%"+nome+"%");
+		ResultSet rs = pstm.executeQuery();
+		
+		rs.next();
+		
+		Double cadastro = rs.getDouble("total");
+		
+		Double porpagina = 5.0;
+		
+		Double pagina = cadastro / porpagina;
+		
+		Double resto = pagina % 2;
+		
+		if(resto > 0) {
+			pagina ++;
+		}
+		
+		return pagina.intValue();
+	}
+	
 	public boolean existeLogin(String login) throws Exception{
 		
 		String sql = "Select count(1) > 0 as existe_login from model_usuario where upper(login) = upper(?)";

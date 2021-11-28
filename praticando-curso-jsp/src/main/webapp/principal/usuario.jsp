@@ -180,6 +180,12 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 																<button onclick="limarForm();" class="btn btn-secondary waves-effect waves-light">Limpar Formulario</button>
 																<button type="submit" class="btn btn-success waves-effect waves-light">Salvar</button>
 																<button type="button" onclick="deletarAjax();" class="btn btn-danger waves-effect waves-light">Excluir</button>
+																
+																<c:if test="${dadosUsuario != null}">
+																	
+																	<a href="<%=request.getContextPath()%>/servletTelefoneController?idUser=${dadosUsuario.id}" class="btn btn-dark">Telefone</a>
+																	
+																</c:if>
 																<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Pesquisar</button>
 															</div>
 														</form>
@@ -285,6 +291,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 
 	<jsp:include page="javascriptfile.jsp"></jsp:include>
 	<script type="text/javascript">
+	
 	
 		window.onload =  function () {
 			
@@ -438,7 +445,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 
 						var json = JSON.parse(response);
 						
-						var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjax");
+						var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjaxModal");
 
 						for (var p = 0; p < json.length; p++) {
 							$('#tabelaResultados > tbody')
@@ -486,7 +493,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 
 						var json = JSON.parse(response);
 						
-						var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjax");
+						var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjaxModal");
 
 						for (var p = 0; p < json.length; p++) {
 							$('#tabelaResultados > tbody')
