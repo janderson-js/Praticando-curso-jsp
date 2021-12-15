@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import connection.SingleConnectionBanco;
+import model.ModelTelefone;
 import model.ModelUsuario;
 
 public class DAOUsuarioRepository implements Serializable{
@@ -391,5 +392,29 @@ public class DAOUsuarioRepository implements Serializable{
 		pstm.execute();
 		connection.commit();
 	}
-
+	
+	public List<ModelUsuario> listaFormularioHTML() throws Exception{
+		
+		String sql = "SELECT id, nome,email FROM public.model_usuario where usuario_admin = false order by id asc offset 0 limit 5";
+		
+		List<ModelUsuario> formularioHTML = new ArrayList<ModelUsuario>();
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		
+		while(rs.next()) {
+			ModelUsuario modelUsuario = new ModelUsuario();
+			DAOTelefoneRepository daoTelefone = new DAOTelefoneRepository();
+			
+			modelUsuario.setId(rs.getLong("id"));
+			modelUsuario.setNome(rs.getString("nome"));
+			modelUsuario.setEmail(rs.getString("email"));
+			modelUsuario.setTelefones(daoTelefone.ListarTelefoneUsuario(rs.getLong("id")));
+			
+			formularioHTML.add(modelUsuario);
+		}
+		
+		return formularioHTML;
+		
+	}
 }

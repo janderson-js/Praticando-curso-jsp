@@ -37,20 +37,12 @@ public class ServletTelefoneController extends HttpServlet {
 			if(acao != null && !acao.equals("null") && acao.equalsIgnoreCase("deletar")) {
 				Long id = Long.parseLong(request.getParameter("id"));
 				
-				
 				request.setAttribute("msgLista", "<div style=\"background-color: #d1e7dd;color: #0f5132;border-color: #0f5132;\" class='alert alert-success '><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\r\n"
 						+ "<strong><i class=\"far fa-check-circle\"></i> Telefone excluido com sucesso!!</strong></div>");
 				daoTelefone.deletarNumero(id, idUser);
 			}
 			
-			modelUsuario = new ModelUsuario();
-			
-			modelUsuario = daoUser.carregarPorId(idUser);
-			List<ModelTelefone> telefones = daoTelefone.ListarTelefoneUsuario(idUser);
-			
-			request.setAttribute("ListaTelefones", telefones);
-			request.setAttribute("dadosUsuario", modelUsuario);
-			request.getRequestDispatcher("principal/cad_telefone.jsp").forward(request, response);
+			this.redirecionarTelefone(request, response, idUser);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,14 +50,12 @@ public class ServletTelefoneController extends HttpServlet {
 		
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			
 			String numero = request.getParameter("numero");			
 			
 			Long idUser = Long.parseLong(request.getParameter("idUser"));						
-			
 
 			modelTelefone = new ModelTelefone();
 			
@@ -83,9 +73,7 @@ public class ServletTelefoneController extends HttpServlet {
 						+ "<strong><i class=\"far fa-check-circle\"></i>Telefone cadastrado com sucesso!!</strong></div>");
 			}
 			
-			
 			this.redirecionarTelefone(request, response,idUser);
-			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

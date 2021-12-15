@@ -51,24 +51,17 @@
 					</a></li>
 				</ul></li>
 		</ul>
-		<div class="pcoded-navigation-label" data-i18n="nav.category.forms">Formularios</div>
+		<div class="pcoded-navigation-label" data-i18n="nav.category.forms">Formulário(s)</div>
 		<ul class="pcoded-item pcoded-left-item">
-			<li><a href="form-elements-component.html"
+			<li><a href="<%=request.getContextPath()%>/principal/formularios_usuario.jsp"
 				class="waves-effect waves-dark"> <span class="pcoded-micon"><i
 						class="ti-layers"></i><b>FC</b></span> <span class="pcoded-mtext"
-					data-i18n="nav.form-components.main">Form Components</span> <span
+					data-i18n="nav.form-components.main">Form. Usuário</span> <span
 					class="pcoded-mcaret"></span>
 			</a></li>
-			<li><a href="bs-basic-table.html"
-				class="waves-effect waves-dark"> <span class="pcoded-micon"><i
-						class="ti-layers"></i><b>FC</b></span> <span class="pcoded-mtext"
-					data-i18n="nav.form-components.main">Basic Table</span> <span
-					class="pcoded-mcaret"></span>
-			</a></li>
-
 		</ul>
 
-		<div class="pcoded-navigation-label" data-i18n="nav.category.forms">Graficos</div>
+		<div class="pcoded-navigation-label" data-i18n="nav.category.forms">Gráficos</div>
 		<ul class="pcoded-item pcoded-left-item">
 			<li><a href="chart.html" class="waves-effect waves-dark"> <span
 					class="pcoded-micon"><i class="ti-layers"></i><b>FC</b></span> <span
