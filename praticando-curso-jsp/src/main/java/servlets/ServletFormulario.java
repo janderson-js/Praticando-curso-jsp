@@ -40,17 +40,32 @@ public class ServletFormulario extends HttpServlet {
 			if(acao != null && !acao.equals("null") && acao.equalsIgnoreCase("formularioHTML")) {
 				
 				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()) {
-					DAOUsuarioRepository daoTelefone = new DAOUsuarioRepository();
-					List<ModelUsuario> listaFormularioHTML = daoTelefone.listaFormularioHTML();
+					DAOUsuarioRepository daoUser = new DAOUsuarioRepository();
+					List<ModelUsuario> listaFormularioHTML = daoUser.listaFormularioHTML();
 					
 					ObjectMapper objectMapper = new ObjectMapper();
 					String json = objectMapper.writeValueAsString(listaFormularioHTML);
 					
+					response.addHeader("totalPagAjaxForm", ""+ daoUser.totalPagForm());
 					response.getWriter().write(json);
 					
 				}else {
 					System.out.println("formulario com filtro de data /" + dataInicial +" data //"+ dataFinal);
 				}
+				
+			}else if(acao != null && !acao.equals("null") && acao.equalsIgnoreCase("listaAjaxFormHTML")) {
+				
+				String offSet = request.getParameter("pagina");
+				
+				DAOUsuarioRepository daoUser = new DAOUsuarioRepository();
+				
+				List<ModelUsuario> listaFormularioHTMLOffSet = daoUser.listaFormularioHTMLOffSet(offSet);
+				
+				ObjectMapper objectMapper = new ObjectMapper();
+				String json = objectMapper.writeValueAsString(listaFormularioHTMLOffSet);
+				
+				response.addHeader("totalPagAjaxForm", ""+ daoUser.totalPagForm());
+				response.getWriter().write(json);
 				
 			}else if(acao != null && !acao.equals("null") && acao.equalsIgnoreCase("formularioPDF")) {
 				

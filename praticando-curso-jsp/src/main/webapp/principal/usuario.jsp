@@ -321,7 +321,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 								+ '<td> <button class="btn btn-success" onclick="editar('+ json[p].id +');">ver</a> </td></tr>');;
 					}
 					
-					var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjax");
+					var totalPaginaAjax = xhr.getResponseHeader("totalPagina");
 					
 					for(var i = 0; i < totalPaginaAjax; i++){
 						var url = "acao=listaAjax&pagina=" + i*5; 
@@ -343,6 +343,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 		function listaOffSet(url){
 			
 			var urlAction = document.getElementById("formUsuario").action;
+			
 			
 			$.ajax({
 				
@@ -368,7 +369,7 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 								+ '<td> <button class="btn btn-success" onclick="editar('+ json[p].id +');">ver</a> </td></tr>');;
 					}
 					
-					var totalPaginaAjax = xhr.getResponseHeader("totalPaginaAjax");
+					var totalPaginaAjax = xhr.getResponseHeader("totalPagina");
 					
 					for(var i = 0; i < totalPaginaAjax; i++){
 						
@@ -379,6 +380,8 @@ ModelUsuario dadosUsuario = (ModelUsuario) request.getAttribute("dadosUsuario");
 					}
 					
 					scroll();
+					
+					document.getElementById('total').textContent = 'Resultados: '+totalPaginaAjax;
 					
 				}
 				

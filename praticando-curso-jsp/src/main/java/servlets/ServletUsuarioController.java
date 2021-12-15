@@ -98,7 +98,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				ObjectMapper objectMapper = new ObjectMapper();
 				String json = objectMapper.writeValueAsString(usuarios);
 				
-				response.addHeader("totalPaginaAjax", ""+ daoUsuarioRepository.totalPagina());
+				response.addHeader("totalPagina", ""+ daoUsuarioRepository.totalPagina());
 				response.getWriter().write(json);
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listaAjax")) {
@@ -109,7 +109,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				ObjectMapper objectMapper = new ObjectMapper();
 				String json = objectMapper.writeValueAsString(usuarios);
 				
-				response.addHeader("totalPaginaAjax", ""+ daoUsuarioRepository.totalPagina());
+				response.addHeader("totalPagina", ""+ daoUsuarioRepository.totalPagina());
 				response.getWriter().write(json);
 				
 			}

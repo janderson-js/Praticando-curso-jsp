@@ -70,7 +70,7 @@
 
 														</form>
 														<div id="card-header"></div>
-														<div id="card-body">
+														<div id="card-body" style="overflow: scroll; height: 500px; display: none;">
 															<table id="tableListaUsuario" class="table table-hover">
 																<thead style="background-color: #448aff; color: #fff;">
 																	<tr>
@@ -114,14 +114,14 @@
 			var dataInicial = document.getElementById("dataInicial").value;
 			var dataFinal = document.getElementById("dataFinal").value;
 			var element = document.getElementById("card-body");
+			
+			element.style.display = "block"
 
 			if (verificarDatas(dataInicial, dataFinal)) {
 
 				var url = document.getElementById("formFormulario").action;
 
-				$
-						.ajax(
-								{
+				$.ajax({
 
 									method : "get",
 									url : url,
@@ -174,6 +174,17 @@
 												$("#listaTelefone"+p).append("<a class='dropdown-item' href='#'>"+ telefone.numero +"</a>");
 											}
 										}
+										
+										var totalPaginaAjax = xhr.getResponseHeader("totalPagAjaxForm");
+										
+										for(var i = 0; i < totalPaginaAjax; i++){
+											var url = "acao=listaAjaxFormHTML&pagina=" + i*5; 
+											$('#pag').append('<li class="page-item"><a class="page-link" href="#" onclick="listaOffSet(\''+url+'\')">'+(i+1)+'</a></li>');
+											
+										}
+										
+										document.getElementById('total').textContent = 'Total de Paginas: '+totalPaginaAjax;
+										
 										$("#card-header")
 												.append(
 														"<div class='card-header'><h5>Formulário de Usuários Cadastrados</h5></div>");
@@ -185,6 +196,87 @@
 											+ xhr.responseText);
 								});
 			}
+		}
+		
+		function listaOffSet(url){
+			
+			var urlAction = document.getElementById("formFormulario").action;
+			var element = document.getElementById("card-body");
+			
+			$.ajax({
+
+						method : "get",
+						url : urlAction,
+						data :url,
+						success : function(response, textStatus,
+								xhr) {
+
+							var json = JSON.parse(response);
+						
+							
+							element.classList.remove("card-body");
+							
+							$('#tableListaUsuario > tbody > tr')
+									.remove();
+							$('#tableListaUsuario > thead > tr')
+									.remove();
+							$("#card-header > div").remove();
+							$("#pag > li").remove();
+
+							$('#tableListaUsuario > thead')
+									.append(
+											"<tr> <td>ID</td> <td>NOME</td> <td>E-MAIL</td> <td>TELEFONE(S)</td> </tr>");
+							element.classList.add("card-body");
+
+							for (var p = 0; p < json.length; p++) {
+
+								if (json[p].email == null) {
+
+									json[p].email = "     ";
+
+								}
+
+								$('#tableListaUsuario > tbody')
+										.append(
+												'<tr><td>'
+														+ json[p].id
+														+ '</td><td>'
+														+ json[p].nome
+														+ '</td><td>'
+														+ json[p].email
+														+ '</td><td>'+
+														
+														"<div  class='dropdown show'> <a style='background-color: #448aff; color: #fff;' class='btn btn-secondary dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Telefone(s)</a>"+
+
+													  "<div id='listaTelefone"+p+"'class='dropdown-menu' aria-labelledby='dropdownMenuLink'></div></div>"
+													  
+														+'</td></tr>');
+								for(telefone of json[p].telefones){
+									$("#listaTelefone"+p).append("<a class='dropdown-item' href='#'>"+ telefone.numero +"</a>");
+								}
+							}
+							
+							var totalPaginaAjax = xhr.getResponseHeader("totalPagAjaxForm");
+							
+							for(var i = 0; i < totalPaginaAjax; i++){
+								var url = "acao=listaAjaxFormHTML&pagina=" + i*5; 
+								$('#pag').append('<li class="page-item"><a class="page-link" href="#" onclick="listaOffSet(\''+url+'\')">'+(i+1)+'</a></li>');
+								
+							}
+							
+							document.getElementById('total').textContent = 'Resultados: '+totalPaginaAjax;
+							
+							$("#card-header")
+									.append(
+											"<div class='card-header'><h5>Formulário de Usuários Cadastrados</h5></div>");
+						}
+
+					}).fail(
+					function(xhr, status, errorThrown) {
+						alert('Erro ao buscar usuario por nome:'
+								+ xhr.responseText);
+					});			
+			
 		}
 
 		function imprimirPDF() {

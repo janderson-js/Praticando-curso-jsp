@@ -178,7 +178,7 @@ public class DAOUsuarioRepository implements Serializable{
 		
 		Double resto = pagina % 2;
 		
-		if(resto > 1) {
+		if(resto > 0) {
 			pagina ++;
 		}
 		
@@ -191,6 +191,30 @@ public class DAOUsuarioRepository implements Serializable{
 		
 		PreparedStatement pstm = connection.prepareStatement(sql);	
 		pstm.setString(1, "%"+nome+"%");
+		ResultSet rs = pstm.executeQuery();
+		
+		rs.next();
+		
+		Double cadastro = rs.getDouble("total");
+		
+		Double porpagina = 5.0;
+		
+		Double pagina = cadastro / porpagina;
+		
+		Double resto = pagina % 2;
+		
+		if(resto > 0) {
+			pagina ++;
+		}
+		
+		return pagina.intValue();
+	}
+	
+	public int totalPagForm() throws Exception {
+		
+		String sql = "select count(1) as total from model_usuario where usuario_admin = false";
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);	
 		ResultSet rs = pstm.executeQuery();
 		
 		rs.next();
@@ -400,6 +424,32 @@ public class DAOUsuarioRepository implements Serializable{
 		List<ModelUsuario> formularioHTML = new ArrayList<ModelUsuario>();
 		
 		PreparedStatement pstm = connection.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		
+		while(rs.next()) {
+			ModelUsuario modelUsuario = new ModelUsuario();
+			DAOTelefoneRepository daoTelefone = new DAOTelefoneRepository();
+			
+			modelUsuario.setId(rs.getLong("id"));
+			modelUsuario.setNome(rs.getString("nome"));
+			modelUsuario.setEmail(rs.getString("email"));
+			modelUsuario.setTelefones(daoTelefone.ListarTelefoneUsuario(rs.getLong("id")));
+			
+			formularioHTML.add(modelUsuario);
+		}
+		
+		return formularioHTML;
+		
+	}
+	
+	public List<ModelUsuario> listaFormularioHTMLOffSet(String offSet) throws Exception{
+		
+		String sql = "SELECT id, nome,email FROM public.model_usuario where usuario_admin = false order by id asc offset ? limit 5";
+		
+		List<ModelUsuario> formularioHTML = new ArrayList<ModelUsuario>();
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setLong(1, Long.parseLong(offSet));
 		ResultSet rs = pstm.executeQuery();
 		
 		while(rs.next()) {
