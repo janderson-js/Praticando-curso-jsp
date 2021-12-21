@@ -1,9 +1,10 @@
 package servlets;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -37,6 +38,7 @@ public class ServletFormulario extends HttpServlet {
 			String dataFinal = request.getParameter("dataFinal");
 			
 			
+			
 			if(acao != null && !acao.equals("null") && acao.equalsIgnoreCase("formularioHTML")) {
 				
 				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()) {
@@ -50,27 +52,45 @@ public class ServletFormulario extends HttpServlet {
 					response.getWriter().write(json);
 					
 				}else {
-					System.out.println("formulario com filtro de data /" + dataInicial +" data //"+ dataFinal);
+					
+					DAOUsuarioRepository daoUser = new DAOUsuarioRepository();
+					List<ModelUsuario> listaFormularioHTML = daoUser.listaFormularioHTMLData(Date.valueOf(dataInicial),Date.valueOf(dataFinal));
+					
+					ObjectMapper objectMapper = new ObjectMapper();
+					String json = objectMapper.writeValueAsString(listaFormularioHTML);
+					
+					response.addHeader("totalPagAjaxForm", ""+ daoUser.totalPagFormData(Date.valueOf(dataInicial),Date.valueOf(dataFinal)));
+					response.getWriter().write(json);
 				}
 				
 			}else if(acao != null && !acao.equals("null") && acao.equalsIgnoreCase("listaAjaxFormHTML")) {
 				
 				String offSet = request.getParameter("pagina");
+				int totalPag = 0;
 				
 				DAOUsuarioRepository daoUser = new DAOUsuarioRepository();
+				List<ModelUsuario> listaFormularioHTMLOffSet = new ArrayList<ModelUsuario>();
 				
-				List<ModelUsuario> listaFormularioHTMLOffSet = daoUser.listaFormularioHTMLOffSet(offSet);
+				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()) {
+					listaFormularioHTMLOffSet = daoUser.listaFormularioHTMLOffSet(offSet);
+					totalPag = daoUser.totalPagForm();
+				}else {
+					listaFormularioHTMLOffSet = daoUser.listaFormularioHTMLOffSetData(offSet,Date.valueOf(dataInicial),Date.valueOf(dataFinal));
+					totalPag = daoUser.totalPagFormData(Date.valueOf(dataInicial),Date.valueOf(dataFinal));
+				}
 				
 				ObjectMapper objectMapper = new ObjectMapper();
 				String json = objectMapper.writeValueAsString(listaFormularioHTMLOffSet);
 				
-				response.addHeader("totalPagAjaxForm", ""+ daoUser.totalPagForm());
+				response.addHeader("totalPagAjaxForm", ""+ totalPag);
 				response.getWriter().write(json);
 				
 			}else if(acao != null && !acao.equals("null") && acao.equalsIgnoreCase("formularioPDF")) {
 				
 				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()) {
-					System.out.println("formularioPDF sem filtro de data /" + dataInicial +" data //"+ dataFinal);
+					
+					System.out.println("ta aqui");
+					
 				}else {
 					System.out.println("formularioPDF com filtro de data /" + dataInicial +" data //"+ dataFinal);
 				}

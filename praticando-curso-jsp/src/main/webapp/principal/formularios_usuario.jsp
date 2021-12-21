@@ -61,10 +61,6 @@
 																		onclick="imprimirHTML();" class="btn btn-primary mb-2">
 																		<i class="fas fa-file-alt"></i>
 																	</button>
-																	<button title="Gerar Arquivo em PDF" type="button"
-																		onclick="imprimirPDF();" class="btn btn-primary mb-2">
-																		<i class="fas fa-file-pdf"></i>
-																	</button>
 																</div>
 															</div>
 
@@ -115,9 +111,11 @@
 			var dataFinal = document.getElementById("dataFinal").value;
 			var element = document.getElementById("card-body");
 			
-			element.style.display = "block"
+			
 
 			if (verificarDatas(dataInicial, dataFinal)) {
+				
+				element.style.display = "block"
 
 				var url = document.getElementById("formFormulario").action;
 
@@ -178,7 +176,7 @@
 										var totalPaginaAjax = xhr.getResponseHeader("totalPagAjaxForm");
 										
 										for(var i = 0; i < totalPaginaAjax; i++){
-											var url = "acao=listaAjaxFormHTML&pagina=" + i*5; 
+											var url = "acao=listaAjaxFormHTML&pagina=" + i*5 + "&dataInicial=" + dataInicial + "&dataFinal=" + dataFinal; 
 											$('#pag').append('<li class="page-item"><a class="page-link" href="#" onclick="listaOffSet(\''+url+'\')">'+(i+1)+'</a></li>');
 											
 										}
@@ -202,6 +200,8 @@
 			
 			var urlAction = document.getElementById("formFormulario").action;
 			var element = document.getElementById("card-body");
+			var dataIncial = document.getElementById("dataInicial").value;
+			var dataFinal = document.getElementById("dataFinal").value;
 			
 			$.ajax({
 
@@ -245,7 +245,6 @@
 														+ '</td><td>'
 														+ json[p].email
 														+ '</td><td>'+
-														
 														"<div  class='dropdown show'> <a style='background-color: #448aff; color: #fff;' class='btn btn-secondary dropdown-toggle' href='#' role='button' id='dropdownMenuLink' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Telefone(s)</a>"+
 
 													  "<div id='listaTelefone"+p+"'class='dropdown-menu' aria-labelledby='dropdownMenuLink'></div></div>"
@@ -259,12 +258,12 @@
 							var totalPaginaAjax = xhr.getResponseHeader("totalPagAjaxForm");
 							
 							for(var i = 0; i < totalPaginaAjax; i++){
-								var url = "acao=listaAjaxFormHTML&pagina=" + i*5; 
+								var url = "acao=listaAjaxFormHTML&pagina=" + i*5 + "&dataInicial="+ dataIncial + "&dataFinal="+ dataFinal; 
 								$('#pag').append('<li class="page-item"><a class="page-link" href="#" onclick="listaOffSet(\''+url+'\')">'+(i+1)+'</a></li>');
 								
 							}
 							
-							document.getElementById('total').textContent = 'Resultados: '+totalPaginaAjax;
+							document.getElementById('total').textContent = 'Total de Paginas: '+totalPaginaAjax;
 							
 							$("#card-header")
 									.append(
@@ -279,42 +278,30 @@
 			
 		}
 
-		function imprimirPDF() {
-
-			document.getElementById("acao").value = "formularioPDF";
-			var dataInicial = document.getElementById("dataInicial").value;
-			var dataFinal = document.getElementById("dataFinal").value;
-
-			verificarDatas(dataInicial, dataFinal);
-		}
-
 		function verificarDatas(dataInicial, dataFinal) {
 			var a = true;
 
 			if (dataFinal.trim() != "" && dataFinal != "" && dataFinal != null) {
-				if (dataInicial == "" || dataInicial.trim() == ""
-						|| dataInicial == null) {
+				if (dataInicial == "" || dataInicial.trim() == "" || dataInicial == null) {
 					alert("informe a data inicial!!");
 					a = false;
-				} else if (dataInicial != "") {
-					a = true;
 				}
 
 			} else if (dataInicial != "" && dataFinal == "") {
-				alert(" Não foi informada a data Final!! \n O sistema irá usar a data atual para realizar a busca");
-				document.getElementById("dataFinal").value = dataAtualFormatada();
+				alert(" Não foi informada a data Final!! \n");
+				a = false;
 			}
 
-			if (dataFinalMaior()) {
+			if (dataFinalMenor()) {
 				if (a) {
 					if (dataMaiorAtual()) {
 						return a;
 					} else {
-						alert("As data informadas não pode ser maior que a data atual");
+						alert("As data informadas não podem ser maior que a data atual");
 					}
 				}
 			} else {
-				alert("A data final não pode ser maior que a data incial!!");
+				alert("A data final não pode ser menor que a data incial!!");
 			}
 		}
 
@@ -327,15 +314,14 @@
 			var data2 = new Date(document.getElementById("dataFinal").value);
 			var dataAtual = new Date(dataAtualFormatada());
 
-			if (data1.getTime() > dataAtual.getTime()
-					|| data2.getTime() > dataAtual.getTime()) {
+			if (data1.getTime() > dataAtual.getTime() || data2.getTime() > dataAtual.getTime()) {
 				dataResult = false;
 			}
 
 			return dataResult;
 		}
 
-		function dataFinalMaior() {
+		function dataFinalMenor() {
 			var urlAction = document.getElementById("formFormulario").action;
 
 			var data1 = new Date(document.getElementById("dataInicial").value);

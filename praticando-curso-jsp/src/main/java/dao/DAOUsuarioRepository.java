@@ -2,13 +2,16 @@ package dao;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import beandto.BeanDtoGraficoSalarioUsuario;
 import connection.SingleConnectionBanco;
 import model.ModelTelefone;
 import model.ModelUsuario;
@@ -182,6 +185,8 @@ public class DAOUsuarioRepository implements Serializable{
 			pagina ++;
 		}
 		
+		connection.commit();
+		
 		return pagina.intValue();
 	}
 	
@@ -207,6 +212,8 @@ public class DAOUsuarioRepository implements Serializable{
 			pagina ++;
 		}
 		
+		connection.commit();
+		
 		return pagina.intValue();
 	}
 	
@@ -231,6 +238,36 @@ public class DAOUsuarioRepository implements Serializable{
 			pagina ++;
 		}
 		
+		connection.commit();
+		
+		return pagina.intValue();
+	}
+	
+	public int totalPagFormData(Date dataInicial, Date dataFinal) throws Exception {
+		
+		String sql = "select count(1) as total from model_usuario where data_cad >= ? and data_cad <= ? and usuario_admin = false";
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setDate(1, dataInicial);
+		pstm.setDate(2, dataFinal);
+		ResultSet rs = pstm.executeQuery();
+		
+		rs.next();
+		
+		Double cadastro = rs.getDouble("total");
+		
+		Double porpagina = 5.0;
+		
+		Double pagina = cadastro / porpagina;
+		
+		Double resto = pagina % 2;
+		
+		if(resto > 0) {
+			pagina ++;
+		}
+		
+		connection.commit();
+		
 		return pagina.intValue();
 	}
 	
@@ -244,6 +281,8 @@ public class DAOUsuarioRepository implements Serializable{
 		if(rs.getBoolean("existe_login")) {
 			return true;
 		}
+		
+		connection.commit();
 		
 		return false;
 	}
@@ -265,6 +304,8 @@ public class DAOUsuarioRepository implements Serializable{
 			modelUsuario.setLogin(rs.getString("login"));
 			modelUsuario.setFotoUser(rs.getString("foto_user"));
 		}
+		
+		connection.commit();
 		
 		return modelUsuario;
 	}
@@ -299,6 +340,8 @@ public class DAOUsuarioRepository implements Serializable{
 			
 		}
 		
+		connection.commit();
+		
 		return modelUsuario;
 	}
 
@@ -317,6 +360,8 @@ public class DAOUsuarioRepository implements Serializable{
 			modelUsuario.setPerfil(rs.getString("perfil"));
 			modelUsuario.setLogin(rs.getString("login"));
 		}
+		
+		connection.commit();
 		
 		return modelUsuario;
 	}
@@ -353,6 +398,8 @@ public class DAOUsuarioRepository implements Serializable{
 			this.modelUsuario = modelUsuario;
 			
 		}
+		
+		connection.commit();
 		
 		return modelUsuario;
 	}
@@ -438,6 +485,8 @@ public class DAOUsuarioRepository implements Serializable{
 			formularioHTML.add(modelUsuario);
 		}
 		
+		connection.commit();
+		
 		return formularioHTML;
 		
 	}
@@ -464,7 +513,122 @@ public class DAOUsuarioRepository implements Serializable{
 			formularioHTML.add(modelUsuario);
 		}
 		
+		connection.commit();
+		
 		return formularioHTML;
 		
+	}
+	
+	public List<ModelUsuario> listaFormularioHTMLData(Date dataInicial, Date dataFinal)throws Exception {
+		
+		String sql = "SELECT id, nome,email, data_cad FROM public.model_usuario where data_cad >= ? and data_cad <= ? and usuario_admin = false order by id asc limit 5";
+		
+		List<ModelUsuario> formularioHTML = new ArrayList<ModelUsuario>();
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setDate(1, dataInicial);
+		pstm.setDate(2, dataFinal);
+		ResultSet rs = pstm.executeQuery();
+		
+		while(rs.next()) {
+			ModelUsuario modelUsuario = new ModelUsuario();
+			DAOTelefoneRepository daoTelefone = new DAOTelefoneRepository();
+			
+			modelUsuario.setId(rs.getLong("id"));
+			modelUsuario.setNome(rs.getString("nome"));
+			modelUsuario.setEmail(rs.getString("email"));
+			modelUsuario.setTelefones(daoTelefone.ListarTelefoneUsuario(rs.getLong("id")));
+			
+			formularioHTML.add(modelUsuario);
+		}
+		
+		connection.commit();
+		
+		return formularioHTML;
+	}
+
+	public List<ModelUsuario> listaFormularioHTMLOffSetData(String offSet, Date dataInicial, Date dataFinal)throws Exception {
+		
+		String sql = "SELECT id, nome,email FROM public.model_usuario where data_cad >= ? and data_cad <= ? and usuario_admin = false order by id asc offset ? limit 5;";
+		
+		List<ModelUsuario> formularioHTML = new ArrayList<ModelUsuario>();
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setDate(1, dataInicial);
+		pstm.setDate(2, dataFinal);
+		pstm.setLong(3, Long.parseLong(offSet));
+		ResultSet rs = pstm.executeQuery();
+		
+		while(rs.next()) {
+			ModelUsuario modelUsuario = new ModelUsuario();
+			DAOTelefoneRepository daoTelefone = new DAOTelefoneRepository();
+			
+			modelUsuario.setId(rs.getLong("id"));
+			modelUsuario.setNome(rs.getString("nome"));
+			modelUsuario.setEmail(rs.getString("email"));
+			modelUsuario.setTelefones(daoTelefone.ListarTelefoneUsuario(rs.getLong("id")));
+			
+			formularioHTML.add(modelUsuario);
+		}
+		
+		connection.commit();
+		
+		return formularioHTML;
+	}
+	
+	public BeanDtoGraficoSalarioUsuario graficoSalario() throws Exception {
+		
+		BeanDtoGraficoSalarioUsuario graficoSalario = new BeanDtoGraficoSalarioUsuario();
+		
+		String sql = "Select perfil, avg(renda_mensal) as media_perfil  from model_usuario group by perfil order by media_perfil";
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		
+		List<String> perfil = new ArrayList<String>();
+		List<Double> salario = new ArrayList<Double>();
+		
+		while (rs.next()) {
+			String rsPerfil = rs.getString("perfil");
+			Double rsSalario = rs.getDouble("media_perfil");
+			
+			perfil.add(rsPerfil);
+			salario.add(rsSalario);
+			
+		}
+		
+		graficoSalario.setPerfil(perfil);
+		graficoSalario.setSalario(salario);
+		
+		return graficoSalario;
+	}
+	
+	public BeanDtoGraficoSalarioUsuario graficoSalarioData(Date dataInicial, Date dataFinal) throws Exception {
+		
+		BeanDtoGraficoSalarioUsuario graficoSalario = new BeanDtoGraficoSalarioUsuario();
+		
+		String sql = "Select perfil, avg(renda_mensal) as media_perfil  from model_usuario where data_cad >= ? and data_cad <= ? group by perfil order by  media_perfil";
+		
+		PreparedStatement pstm = connection.prepareStatement(sql);
+		pstm.setDate(1, dataInicial);
+		pstm.setDate(2, dataFinal);
+		ResultSet rs = pstm.executeQuery();
+		
+		List<String> perfil = new ArrayList<String>();
+		List<Double> salario = new ArrayList<Double>();
+		
+		while (rs.next()) {
+			String rsPerfil = rs.getString("perfil");
+			Double rsSalario = rs.getDouble("media_perfil");
+			
+			perfil.add(rsPerfil);
+			salario.add(rsSalario);
+			
+		}
+		
+		graficoSalario.setPerfil(perfil);
+		graficoSalario.setSalario(salario);
+		
+		return graficoSalario;
 	}
 }
